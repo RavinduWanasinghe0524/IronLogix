@@ -1,0 +1,36 @@
+{
+  "business": {
+    "name": "BuildSmart Hardware Store",
+    "address": "123 Main Street, Ratnapura",
+    "phone": "077-1234567",
+    "email": "info@buildsmart.lk",
+    "logo_path": "assets/logo.png"
+  },
+  "settings": {
+    "default_language": "english",
+    "currency": "LKR",
+    "tax_rate": 0.0,
+    "theme": "dark"
+  },
+  "features": {
+    "whatsapp_enabled": true,
+    "voice_enabled": true,
+    "barcode_enabled": true,
+    "loyalty_enabled": true,
+    "ai_predictions_enabled": true,
+    "cloud_backup_enabled": false
+  },
+  "loyalty": {
+    "points_per_100_lkr": 1,
+    "reward_threshold": 500,
+    "reward_value": 100
+  },
+  "whatsapp": {
+    "country_code": "+94",
+    "send_delay_seconds": 15
+  },
+  "api_keys": {
+    "google_drive_credentials": "",
+    "whatsapp_api_key": ""
+  }
+}
