@@ -118,6 +118,39 @@ class DatabaseValidator:
         conn.close()
         return len(missing_indexes) == 0
     
+    def check_triggers(self):
+        """Verify data integrity triggers exist."""
+        conn = self.connect()
+        if not conn:
+            return False
+        
+        cursor = conn.cursor()
+        
+        print("\n⚡ Checking data integrity triggers...")
+        
+        # Get existing triggers
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='trigger'")
+        existing_triggers = [row[0] for row in cursor.fetchall()]
+        
+        # Expected triggers
+        expected_triggers = [
+            'update_customer_purchases',
+            'prevent_negative_stock'
+        ]
+        
+        missing_triggers = [trg for trg in expected_triggers if trg not in existing_triggers]
+        
+        if missing_triggers:
+            self.issues.append(f"Missing triggers: {', '.join(missing_triggers)}")
+            print(f"❌ Missing {len(missing_triggers)} data integrity triggers")
+            for trg in missing_triggers:
+                print(f"   - {trg}")
+        else:
+            print(f"✅ All {len(expected_triggers)} critical triggers present")
+        
+        conn.close()
+        return len(missing_triggers) == 0
+    
     def check_data_integrity(self):
         """Check for data integrity issues."""
         conn = self.connect()
@@ -330,6 +363,9 @@ class DatabaseValidator:
         
         # Check indexes
         indexes_valid = self.check_indexes()
+        
+        # Check triggers
+        triggers_valid = self.check_triggers()
         
         # Check data integrity
         integrity_valid = self.check_data_integrity()

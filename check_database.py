@@ -112,10 +112,22 @@ def check_database_schema():
         print(f"📇 Total Indexes: {index_count}")
         
         # Check for triggers
-        cursor.execute("SELECT COUNT(*) FROM sqlite_master WHERE type='trigger'")
-        trigger_count = cursor.fetchone()[0]
+        cursor.execute("SELECT name FROM sqlite_master WHERE type='trigger'")
+        triggers = [row[0] for row in cursor.fetchall()]
+        trigger_count = len(triggers)
         print(f"⚡ Total Triggers: {trigger_count}")
+        if triggers:
+            for trg in triggers:
+                print(f"   - {trg}")
         
+        summary_data['triggers'] = triggers
+        summary_data['stats'] = {
+            'table_count': len(tables),
+            'record_count': total_records,
+            'index_count': index_count,
+            'trigger_count': trigger_count
+        }
+
         # Business Intelligence
         print(f"\n{'═' * 70}")
         print("💼 BUSINESS INTELLIGENCE")

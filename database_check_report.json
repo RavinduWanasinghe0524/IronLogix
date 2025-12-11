@@ -1,5 +1,5 @@
 {
-  "timestamp": "2025-12-12T02:27:03.550542",
+  "timestamp": "2025-12-12T02:42:42.118373",
   "database": "buildsmart_hardware.db",
   "tables": {
     "products": {
@@ -528,5 +528,15 @@
       "record_count": 0,
       "indexes": []
     }
+  },
+  "triggers": [
+    "update_customer_purchases",
+    "prevent_negative_stock"
+  ],
+  "stats": {
+    "table_count": 9,
+    "record_count": 20,
+    "index_count": 18,
+    "trigger_count": 2
   }
 }
