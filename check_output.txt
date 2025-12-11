@@ -1,0 +1,232 @@
+======================================================================
+🔍 BUILDSMART DATABASE SCHEMA VERIFICATION
+======================================================================
+📅 Date: 2025-12-12 02:42:42
+📁 Database: buildsmart_hardware.db
+
+📊 Found 9 table(s)
+
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: PRODUCTS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+name                      TEXT            YES        
+category                  TEXT            NO         
+price_per_unit            REAL            YES        
+cost_price                REAL            NO         0
+stock_quantity            REAL            YES        
+unit_type                 TEXT            YES        
+reorder_level             INTEGER         NO         10
+barcode                   TEXT            NO         
+supplier_id               INTEGER         NO         
+image_path                TEXT            NO         
+description               TEXT            NO         
+
+📊 Records: 10
+📇 Indexes: 5
+   - idx_products_stock
+   - idx_products_category
+   - idx_products_barcode
+   - idx_products_name
+   - sqlite_autoindex_products_1
+
+📝 Sample Data (showing 3 of 10 records):
+   Record 1: (1, 'Tokyo Super Cement 50kg', 'Cement')...
+   Record 2: (2, 'River Sand (Sudda)', 'Sand')...
+   Record 3: (3, 'Asbestos Sheet 8ft', 'Roofing')...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: SQLITE_SEQUENCE
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+name                                      NO         
+seq                                       NO         
+
+📊 Records: 5
+📇 Indexes: None
+
+📝 Sample Data (showing all 5 record(s)):
+   Record 1: ('suppliers', 1)...
+   Record 2: ('products', 10)...
+   Record 3: ('customers', 1)...
+   Record 4: ('transactions', 1)...
+   Record 5: ('sales_items', 2)...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: CUSTOMERS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+phone_number              TEXT            YES        
+name                      TEXT            NO         
+email                     TEXT            NO         
+address                   TEXT            NO         
+total_purchases           REAL            NO         0
+loyalty_points            INTEGER         NO         0
+created_date              TEXT            NO         CURRENT_TIMESTAMP
+
+📊 Records: 1
+📇 Indexes: 4
+   - idx_customers_points
+   - idx_customers_name
+   - idx_customers_phone
+   - sqlite_autoindex_customers_1
+
+📝 Sample Data (showing all 1 record(s)):
+   Record 1: (1, '0771234567', 'Kasun Perera')...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: TRANSACTIONS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+date_time                 TEXT            YES        
+customer_id               INTEGER         NO         
+total_amount              REAL            YES        
+discount_amount           REAL            NO         0
+payment_method            TEXT            NO         'Cash'
+payment_status            TEXT            NO         'Paid'
+notes                     TEXT            NO         
+
+📊 Records: 1
+📇 Indexes: 3
+   - idx_transactions_status
+   - idx_transactions_customer
+   - idx_transactions_date
+
+📝 Sample Data (showing all 1 record(s)):
+   Record 1: (1, '2025-12-12 01:56:17', None)...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: SALES_ITEMS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+transaction_id            INTEGER         NO         
+product_id                INTEGER         NO         
+quantity_sold             REAL            YES        
+unit_price                REAL            YES        
+sub_total                 REAL            YES        
+
+📊 Records: 2
+📇 Indexes: 2
+   - idx_sales_items_product
+   - idx_sales_items_transaction
+
+📝 Sample Data (showing all 2 record(s)):
+   Record 1: (1, 1, 7)...
+   Record 2: (2, 1, 1)...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: SUPPLIERS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+name                      TEXT            YES        
+contact_person            TEXT            NO         
+phone_number              TEXT            NO         
+email                     TEXT            NO         
+address                   TEXT            NO         
+total_purchases           REAL            NO         0
+created_date              TEXT            NO         CURRENT_TIMESTAMP
+
+📊 Records: 1
+📇 Indexes: None
+
+📝 Sample Data (showing all 1 record(s)):
+   Record 1: (1, 'Ceylon Hardware Suppliers', 'Mr. Silva')...
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: LOYALTY_TRANSACTIONS
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+customer_id               INTEGER         YES        
+points_change             INTEGER         YES        
+transaction_id            INTEGER         NO         
+description               TEXT            NO         
+date_time                 TEXT            NO         CURRENT_TIMESTAMP
+
+📊 Records: 0
+📇 Indexes: 2
+   - idx_loyalty_date
+   - idx_loyalty_customer
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: CREDIT_SALES
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+transaction_id            INTEGER         YES        
+customer_id               INTEGER         YES        
+total_amount              REAL            YES        
+amount_paid               REAL            NO         0
+balance                   REAL            YES        
+due_date                  TEXT            NO         
+status                    TEXT            NO         'Pending'
+
+📊 Records: 0
+📇 Indexes: 2
+   - idx_credit_sales_status
+   - idx_credit_sales_customer
+
+══════════════════════════════════════════════════════════════════════
+📋 Table: EXPENSES
+══════════════════════════════════════════════════════════════════════
+
+Column Name               Type            Not Null   Default
+----------------------------------------------------------------------
+id 🔑                      INTEGER         NO         
+date_time                 TEXT            YES        
+category                  TEXT            YES        
+amount                    REAL            YES        
+description               TEXT            NO         
+payment_method            TEXT            NO         'Cash'
+
+📊 Records: 0
+📇 Indexes: None
+
+══════════════════════════════════════════════════════════════════════
+📈 OVERALL DATABASE STATISTICS
+══════════════════════════════════════════════════════════════════════
+📊 Total Tables: 9
+📊 Total Records: 20
+📇 Total Indexes: 18
+⚡ Total Triggers: 2
+   - update_customer_purchases
+   - prevent_negative_stock
+
+══════════════════════════════════════════════════════════════════════
+💼 BUSINESS INTELLIGENCE
+══════════════════════════════════════════════════════════════════════
+💰 Total Revenue: LKR 4,675.00
+📦 Inventory Value: LKR 1,906,225.00
+👥 Total Customers: 1
+🎁 Loyalty Points Issued: 150
+⚠️  Low Stock Items: 1
+   - Wiring Cable 1mm (Kelani): 10.0 (reorder at 10)
+
+💾 Report exported to: database_check_report.json
+
+══════════════════════════════════════════════════════════════════════
+✅ Database schema check complete!
+══════════════════════════════════════════════════════════════════════
+
