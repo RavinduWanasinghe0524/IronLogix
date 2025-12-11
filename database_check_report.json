@@ -1,0 +1,532 @@
+{
+  "timestamp": "2025-12-12T02:27:03.550542",
+  "database": "buildsmart_hardware.db",
+  "tables": {
+    "products": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "category",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "price_per_unit",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "cost_price",
+          "type": "REAL",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "stock_quantity",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "unit_type",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "reorder_level",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": "10",
+          "primary_key": false
+        },
+        {
+          "name": "barcode",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "supplier_id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "image_path",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        }
+      ],
+      "record_count": 10,
+      "indexes": [
+        "idx_products_stock",
+        "idx_products_category",
+        "idx_products_barcode",
+        "idx_products_name",
+        "sqlite_autoindex_products_1"
+      ]
+    },
+    "sqlite_sequence": {
+      "columns": [
+        {
+          "name": "name",
+          "type": "",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "seq",
+          "type": "",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        }
+      ],
+      "record_count": 5,
+      "indexes": []
+    },
+    "customers": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "phone_number",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "email",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "address",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "total_purchases",
+          "type": "REAL",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "loyalty_points",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "created_date",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "CURRENT_TIMESTAMP",
+          "primary_key": false
+        }
+      ],
+      "record_count": 1,
+      "indexes": [
+        "idx_customers_points",
+        "idx_customers_name",
+        "idx_customers_phone",
+        "sqlite_autoindex_customers_1"
+      ]
+    },
+    "transactions": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "date_time",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "total_amount",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "discount_amount",
+          "type": "REAL",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "payment_method",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "'Cash'",
+          "primary_key": false
+        },
+        {
+          "name": "payment_status",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "'Paid'",
+          "primary_key": false
+        },
+        {
+          "name": "notes",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        }
+      ],
+      "record_count": 1,
+      "indexes": [
+        "idx_transactions_status",
+        "idx_transactions_customer",
+        "idx_transactions_date"
+      ]
+    },
+    "sales_items": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "transaction_id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "product_id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "quantity_sold",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "unit_price",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "sub_total",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        }
+      ],
+      "record_count": 2,
+      "indexes": [
+        "idx_sales_items_product",
+        "idx_sales_items_transaction"
+      ]
+    },
+    "suppliers": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "name",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "contact_person",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "phone_number",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "email",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "address",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "total_purchases",
+          "type": "REAL",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "created_date",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "CURRENT_TIMESTAMP",
+          "primary_key": false
+        }
+      ],
+      "record_count": 1,
+      "indexes": []
+    },
+    "loyalty_transactions": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "points_change",
+          "type": "INTEGER",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "transaction_id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "date_time",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "CURRENT_TIMESTAMP",
+          "primary_key": false
+        }
+      ],
+      "record_count": 0,
+      "indexes": [
+        "idx_loyalty_date",
+        "idx_loyalty_customer"
+      ]
+    },
+    "credit_sales": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "transaction_id",
+          "type": "INTEGER",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "customer_id",
+          "type": "INTEGER",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "total_amount",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "amount_paid",
+          "type": "REAL",
+          "not_null": false,
+          "default": "0",
+          "primary_key": false
+        },
+        {
+          "name": "balance",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "due_date",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "status",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "'Pending'",
+          "primary_key": false
+        }
+      ],
+      "record_count": 0,
+      "indexes": [
+        "idx_credit_sales_status",
+        "idx_credit_sales_customer"
+      ]
+    },
+    "expenses": {
+      "columns": [
+        {
+          "name": "id",
+          "type": "INTEGER",
+          "not_null": false,
+          "default": null,
+          "primary_key": true
+        },
+        {
+          "name": "date_time",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "category",
+          "type": "TEXT",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "amount",
+          "type": "REAL",
+          "not_null": true,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "description",
+          "type": "TEXT",
+          "not_null": false,
+          "default": null,
+          "primary_key": false
+        },
+        {
+          "name": "payment_method",
+          "type": "TEXT",
+          "not_null": false,
+          "default": "'Cash'",
+          "primary_key": false
+        }
+      ],
+      "record_count": 0,
+      "indexes": []
+    }
+  }
+}
