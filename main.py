@@ -71,6 +71,27 @@ try:
 except ImportError:
     print("Voice assistant not available - install SpeechRecognition and pyttsx3")
 
+try:
+    from product_manager import ProductManager
+    PRODUCT_MANAGER_AVAILABLE = True
+except ImportError:
+    PRODUCT_MANAGER_AVAILABLE = False
+    print("Product manager not available")
+
+try:
+    from customer_manager import CustomerManager
+    CUSTOMER_MANAGER_AVAILABLE = True
+except ImportError:
+    CUSTOMER_MANAGER_AVAILABLE = False
+    print("Customer manager not available")
+
+try:
+    from report_generator import ReportGenerator
+    REPORT_GENERATOR_AVAILABLE = True
+except ImportError:
+    REPORT_GENERATOR_AVAILABLE = False
+    print("Report generator not available")
+
 # Configuration
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -189,6 +210,33 @@ class BuildSmartPOS(ctk.CTk):
             command=self.show_construction_estimator
         )
         estimator_btn.grid(row=0, column=5, padx=5, pady=10)
+        
+        # Product Management Button
+        products_btn = ctk.CTkButton(
+            top_bar, text="📦 Products", width=100,
+            command=self.show_product_manager,
+            fg_color="#6610f2",
+            hover_color="#520dc2"
+        )
+        products_btn.grid(row=0, column=6, padx=5, pady=10)
+        
+        # Customer Management Button
+        customers_btn = ctk.CTkButton(
+            top_bar, text="👥 Customers", width=100,
+            command=self.show_customer_manager,
+            fg_color="#fd7e14",
+            hover_color="#e8590c"
+        )
+        customers_btn.grid(row=0, column=7, padx=5, pady=10)
+        
+        # Reports Button
+        reports_btn = ctk.CTkButton(
+            top_bar, text="📄 Reports", width=100,
+            command=self.show_reports,
+            fg_color="#20c997",
+            hover_color="#17a673"
+        )
+        reports_btn.grid(row=0, column=8, padx=5, pady=10)
     
     def create_product_list_frame(self):
         """Left Side: Scrollable list of products"""
@@ -663,6 +711,30 @@ class BuildSmartPOS(ctk.CTk):
             messagebox.showinfo("Analytics", msg)
         else:
             messagebox.showinfo("Analytics", "No sales data available")
+    
+    def show_product_manager(self):
+        """Show product management interface"""
+        if not PRODUCT_MANAGER_AVAILABLE:
+            messagebox.showinfo("Not Available", "Product manager module not loaded")
+            return
+        
+        ProductManager(self, self)
+    
+    def show_customer_manager(self):
+        """Show customer management interface"""
+        if not CUSTOMER_MANAGER_AVAILABLE:
+            messagebox.showinfo("Not Available", "Customer manager module not loaded")
+            return
+        
+        CustomerManager(self, self)
+    
+    def show_reports(self):
+        """Show report generator"""
+        if not REPORT_GENERATOR_AVAILABLE:
+            messagebox.showinfo("Not Available", "Report generator module not loaded")
+            return
+        
+        ReportGenerator(self, self)
     
     def show_construction_estimator(self):
         """Show construction estimator"""
