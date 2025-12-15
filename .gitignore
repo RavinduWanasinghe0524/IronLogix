@@ -2,6 +2,12 @@
 __pycache__/
 *.py[cod]
 *$py.class
+*.so
+*.egg
+*.egg-info/
+.pytest_cache/
+.coverage
+htmlcov/
 
 # Environments
 .env
@@ -15,18 +21,48 @@ venv.bak/
 # Database
 *.db
 *.sqlite3
+*.db-journal
+backups/*.db
 
 # Distribution / packaging
 dist/
 build/
 *.egg-info/
+*.spec
 
 # Logs
 *.log
+logs/
+*.txt.log
 
 # IDE
 .vscode/
 .idea/
+*.swp
+*.swo
+*~
+.DS_Store
 
-# Local bills
+# Local bills and reports
 bills/
+reports/
+
+# Temporary files
+*.tmp
+*.temp
+~$*
+
+# API Keys and Credentials
+credentials.json
+token.json
+*_credentials.json
+.env.local
+
+# Testing
+test_output/
+.pytest_cache/
+coverage.xml
+
+# OS files
+Thumbs.db
+desktop.ini

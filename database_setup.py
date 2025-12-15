@@ -60,6 +60,7 @@ def create_tables():
             id INTEGER PRIMARY KEY AUTOINCREMENT,
             date_time TEXT NOT NULL,
             customer_id INTEGER,
+            customer_phone TEXT,
             total_amount REAL NOT NULL,
             discount_amount REAL DEFAULT 0,
             payment_method TEXT DEFAULT 'Cash',

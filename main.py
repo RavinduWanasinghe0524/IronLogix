@@ -92,6 +92,13 @@ except ImportError:
     REPORT_GENERATOR_AVAILABLE = False
     print("Report generator not available")
 
+try:
+    from refund_manager import show_refund_manager
+    REFUND_MANAGER_AVAILABLE = True
+except ImportError:
+    REFUND_MANAGER_AVAILABLE = False
+    print("Refund manager not available")
+
 # Configuration
 ctk.set_appearance_mode("Dark")
 ctk.set_default_color_theme("blue")
@@ -237,6 +244,15 @@ class BuildSmartPOS(ctk.CTk):
             hover_color="#17a673"
         )
         reports_btn.grid(row=0, column=8, padx=5, pady=10)
+        
+        # Refund Manager Button
+        refund_btn = ctk.CTkButton(
+            top_bar, text="🔄 Refunds", width=100,
+            command=self.show_refund_manager,
+            fg_color="#dc3545",
+            hover_color="#c82333"
+        )
+        refund_btn.grid(row=0, column=9, padx=5, pady=10)
     
     def create_product_list_frame(self):
         """Left Side: Scrollable list of products"""
@@ -507,6 +523,31 @@ class BuildSmartPOS(ctk.CTk):
             )
             return
         
+        # Check if WhatsApp is enabled but no customer phone
+        if self.whatsapp_var.get() and not self.current_customer_phone:
+            response = messagebox.askyesno(
+                "Customer Phone Required",
+                "WhatsApp is enabled but no customer phone number added.\n\n" +
+                "Would you like to add a customer phone number now?"
+            )
+            if response:
+                self.add_customer_info()
+                # Check again after adding
+                if not self.current_customer_phone:
+                    messagebox.showwarning(
+                        "Phone Required",
+                        "WhatsApp cannot be sent without a phone number.\n" +
+                        "Either add a phone number or uncheck WhatsApp."
+                    )
+                    return
+            else:
+                messagebox.showwarning(
+                    "WhatsApp Disabled",
+                    "WhatsApp will not be sent without a phone number.\n" +
+                    "Proceeding with checkout without WhatsApp."
+                )
+                self.whatsapp_var.set(False)
+        
         total_amount = sum(item['subtotal'] for item in self.cart)
         date_time = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         
@@ -534,10 +575,11 @@ class BuildSmartPOS(ctk.CTk):
                     )
                     customer_id = self.cursor.lastrowid
             
-            # Create Transaction
+            # Create Transaction with customer phone for refund lookup
             self.cursor.execute(
-                "INSERT INTO transactions (date_time, customer_id, total_amount) VALUES (?, ?, ?)",
-                (date_time, customer_id, total_amount)
+                """INSERT INTO transactions (date_time, customer_id, customer_phone, total_amount, payment_method) 
+                   VALUES (?, ?, ?, ?, ?)""",
+                (date_time, customer_id, self.current_customer_phone, total_amount, 'Cash')
             )
             transaction_id = self.cursor.lastrowid
             
@@ -799,6 +841,14 @@ class BuildSmartPOS(ctk.CTk):
             command=calculate,
             width=200, height=40
         ).pack(pady=20)
+    
+    def show_refund_manager(self):
+        """Show refund management interface"""
+        if not REFUND_MANAGER_AVAILABLE:
+            messagebox.showinfo("Not Available", "Refund manager module not loaded")
+            return
+        
+        show_refund_manager(self)
 
 if __name__ == "__main__":
     app = BuildSmartPOS()
