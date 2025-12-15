@@ -15,7 +15,7 @@ class FirstRunWizard(ctk.CTk):
         
         # Window setup
         self.title("BuildSmartOS - First Run Setup")
-        self.geometry("700x600")
+        self.geometry("700x700")
         self.resizable(False, False)
         
         # Center window
@@ -218,7 +218,7 @@ class FirstRunWizard(ctk.CTk):
         
         # Form frame
         form_frame = ctk.CTkFrame(self.content_frame)
-        form_frame.pack(pady=20, padx=40, fill="both", expand=True)
+        form_frame.pack(pady=10, padx=40, fill="both", expand=True)
         
         # Business Name
         ctk.CTkLabel(form_frame, text="Business Name:", font=("Arial", 12, "bold")).pack(anchor="w", padx=20, pady=(20, 5))
