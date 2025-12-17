@@ -625,11 +625,12 @@ class BuildSmartPOS(ctk.CTk):
                     customer_name=self.current_customer_phone
                 )
             
-            # Send WhatsApp
+            # Send WhatsApp (async to prevent UI freeze)
             if self.whatsapp_var.get() and self.current_customer_phone:
                 if WHATSAPP_AVAILABLE and self.config.get("features", {}).get("whatsapp_enabled", True):
                     whatsapp_service = get_whatsapp_service()
-                    success, msg = whatsapp_service.send_invoice(
+                    # Send in background thread to avoid freezing UI
+                    success, msg = whatsapp_service.send_invoice_async(
                         self.current_customer_phone,
                         transaction_id,
                         total_amount,

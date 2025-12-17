@@ -5,6 +5,7 @@ Sends invoices via WhatsApp using pywhatkit
 import pywhatkit as kit
 import json
 import os
+import threading
 from datetime import datetime, timedelta
 
 class WhatsAppService:
@@ -61,6 +62,23 @@ class WhatsAppService:
             
         except Exception as e:
             return False, f"WhatsApp send failed: {str(e)}"
+    
+    def send_invoice_async(self, phone_number, transaction_id, total_amount, items_list, pdf_path=None, callback=None):
+        """Send invoice via WhatsApp asynchronously in background thread"""
+        def send_in_background():
+            try:
+                success, message = self.send_invoice(phone_number, transaction_id, total_amount, items_list, pdf_path)
+                if callback:
+                    callback(success, message)
+            except Exception as e:
+                if callback:
+                    callback(False, f"WhatsApp send failed: {str(e)}")
+        
+        # Start background thread
+        thread = threading.Thread(target=send_in_background, daemon=True)
+        thread.start()
+        
+        return True, "WhatsApp invoice is being sent in background..."
     
     def create_invoice_message(self, business_name, transaction_id, total_amount, items_list):
         """Create formatted invoice message"""

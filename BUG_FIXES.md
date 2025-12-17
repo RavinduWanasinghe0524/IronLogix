@@ -1,6 +1,6 @@
 # BuildSmartOS - Bug Fixes Applied
 
-**Date:** December 15, 2025  
+**Last Updated:** December 17, 2025  
 **Status:** ✅ All Issues Resolved
 
 ---
@@ -38,13 +38,29 @@
 - Line 555-557: Updated INSERT statement to include customer_phone and payment_method fields
 - Now stores: date_time, customer_id, customer_phone, total_amount, payment_method
 
+### 4. WhatsApp Checkout Freeze - Application "Not Responding"
+**Problem:** When clicking checkout with "Send to WhatsApp" enabled, the application would freeze and show "(Not Responding)" in the title bar for 10-15 seconds.
+
+**Root Cause:** The `pywhatkit.sendwhatmsg()` function opens WhatsApp Web in a browser and performs a synchronous blocking operation on the main UI thread, causing the entire application to become unresponsive.
+
+**Solution - Fixed in whatsapp_service.py:**
+- Line 8: Added `import threading`
+- Lines 65-80: Created new `send_invoice_async()` method that wraps the blocking call in a daemon thread
+- Background thread executes WhatsApp sending while UI remains responsive
+
+**Solution - Fixed in main.py:**
+- Line 628: Changed comment to indicate async operation
+- Line 632: Updated from `send_invoice()` to `send_invoice_async()`
+- Checkout now completes immediately while WhatsApp sends in background
+
 ---
 
 ## Files Modified
 
 1. **update_database.py** (NEW) - Database migration script
 2. **refund_manager.py** - Fixed 5 date field references
-3. **main.py** - Updated transaction insert statement
+3. **main.py** - Updated transaction insert statement + WhatsApp async call
+4. **whatsapp_service.py** - Added threading support for async sending
 
 ---
 
@@ -65,6 +81,8 @@
 ✅ Checkout completes successfully  
 ✅ Transaction saved with customer_phone  
 ✅ PDF invoice generated  
+✅ WhatsApp sends in background without freezing UI  
+✅ Refund manager working (search by phone/date)  
 ✅ Ready for refund lookups
 
 ---
