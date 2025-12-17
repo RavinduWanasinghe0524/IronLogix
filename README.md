@@ -1,8 +1,15 @@
 # 🏪 BuildSmartOS - Sri Lanka's First Smart Hardware POS System
 
-![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Tests Passing](https://img.shields.io/badge/Tests-27%2F27%20Passing-success) ![Python](https://img.shields.io/badge/Python-3.8%2B-blue)
+![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Tests Passing](https://img.shields.io/badge/Tests-27%2F27%20Passing-success) ![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![Made in Sri Lanka](https://img.shields.io/badge/Made%20in-Sri%20Lanka%20🇱🇰-orange)
 
-**🎉 Phase 2 Complete!** All automated tests passed (100% success rate). System is production-ready.
+**🎉 NOW WITH INSTALLER! Add products during setup - no technical knowledge required!**
+
+## 🆕 What's New in v1.0
+
+⚡ **One-Click Installation** - New setup wizard walks you through everything
+🛒 **Product Seeding During Install** - Add your initial inventory while installing
+🐛 **WhatsApp Freeze Fixed** - Checkout stays responsive while sending invoices
+📱 **Enhanced Refund System** - Search by phone number or date range
 
 ## Overview
 
@@ -86,6 +93,23 @@ pip install -r requirements.txt
 - 📊 [Phase 2 Test Report](PHASE2_TEST_REPORT.md) - Testing results (100% pass)
 
 ## 🚀 Quick Start
+
+### ⚡ Super Quick Install (3 Steps)
+```bash
+# 1. Clone the repo
+git clone https://github.com/RavinduWanasinghe0524/IronLogix.git
+cd BuildSmartOS
+
+# 2. Run automated installer
+python setup_installer.py
+
+# 3. Launch and enjoy!
+python main.py
+```
+
+**That's it!** The setup wizard will guide you through adding your first products.
+
+**OR** use the manual steps below:
 
 ### 1. Database Setup
 ```bash

@@ -23,7 +23,7 @@ class FirstRunWizard(ctk.CTk):
         
         # Setup variables
         self.current_step = 0
-        self.total_steps = 5
+        self.total_steps = 6  # Added product setup step
         
         # Configuration data
         self.config_data = {
@@ -163,8 +163,10 @@ class FirstRunWizard(ctk.CTk):
         elif step == 2:
             self.show_preferences()
         elif step == 3:
-            self.show_features()
+            self.show_product_setup()
         elif step == 4:
+            self.show_features()
+        elif step == 5:
             self.show_summary()
     
     def show_welcome(self):
@@ -293,6 +295,204 @@ class FirstRunWizard(ctk.CTk):
             font=("Arial", 12)
         )
         sample_check.pack(padx=20, pady=20)
+    
+    def show_product_setup(self):
+        """Initial product setup step"""
+        title = ctk.CTkLabel(
+            self.content_frame,
+            text="Initial Inventory Setup",
+            font=("Arial", 18, "bold")
+        )
+        title.pack(pady=10)
+        
+        subtitle = ctk.CTkLabel(
+            self.content_frame,
+            text="Add some starter products now or skip and add them later",
+            font=("Arial", 12)
+        )
+        subtitle.pack(pady=5)
+        
+        # Initialize products list if not exists
+        if not hasattr(self, 'starter_products'):
+            self.starter_products = []
+        
+        # Products frame
+        products_frame = ctk.CTkFrame(self.content_frame)
+        products_frame.pack(pady=10, padx=40, fill="x")
+        
+        # Products list display
+        list_label = ctk.CTkLabel(
+            products_frame,
+            text=f"Products to add ({len(self.starter_products)}):",
+            font=("Arial", 12, "bold")
+        )
+        list_label.pack(pady=10, padx=20, anchor="w")
+        
+        # Scrollable product list - LIMITED HEIGHT to ensure buttons show
+        self.product_list_frame = ctk.CTkScrollableFrame(products_frame, height=150)
+        self.product_list_frame.pack(fill="x", padx=20, pady=5)
+        
+        self.refresh_product_list()
+        
+        # Add product form
+        add_frame = ctk.CTkFrame(products_frame, fg_color="transparent")
+        add_frame.pack(fill="x", padx=20, pady=10)
+        
+        # Product name
+        name_frame = ctk.CTkFrame(add_frame, fg_color="transparent")
+        name_frame.pack(side="left", padx=5)
+        ctk.CTkLabel(name_frame, text="Name:", font=("Arial", 10)).pack()
+        self.product_name_entry = ctk.CTkEntry(name_frame, width=150, placeholder_text="e.g., Cement 50kg")
+        self.product_name_entry.pack()
+        
+        # Price
+        price_frame = ctk.CTkFrame(add_frame, fg_color="transparent")
+        price_frame.pack(side="left", padx=5)
+        ctk.CTkLabel(price_frame, text="Price (LKR):", font=("Arial", 10)).pack()
+        self.product_price_entry = ctk.CTkEntry(price_frame, width=80, placeholder_text="1850")
+        self.product_price_entry.pack()
+        
+        # Stock
+        stock_frame = ctk.CTkFrame(add_frame, fg_color="transparent")
+        stock_frame.pack(side="left", padx=5)
+        ctk.CTkLabel(stock_frame, text="Stock:", font=("Arial", 10)).pack()
+        self.product_stock_entry = ctk.CTkEntry(stock_frame, width=60, placeholder_text="50")
+        self.product_stock_entry.pack()
+        
+        # Category
+        category_frame = ctk.CTkFrame(add_frame, fg_color="transparent")
+        category_frame.pack(side="left", padx=5)
+        ctk.CTkLabel(category_frame, text="Category:", font=("Arial", 10)).pack()
+        self.product_category_var = ctk.StringVar(value="Cement")
+        category_menu = ctk.CTkOptionMenu(
+            category_frame,
+            values=["Cement", "Bricks", "Aggregates", "Electrical", "Paint", "Tools", "Other"],
+            variable=self.product_category_var,
+            width=100
+        )
+        category_menu.pack()
+        
+        # Add button
+        add_btn = ctk.CTkButton(
+            add_frame,
+            text="Add",
+            width=60,
+            command=self.add_starter_product,
+            fg_color="#2CC985",
+            hover_color="#24A36B"
+        )
+        add_btn.pack(side="left", padx=5, pady=25)
+        
+        # Helper text
+        helper = ctk.CTkLabel(
+            products_frame,
+            text="💡 Tip: You can always add more products later from the Products menu",
+            font=("Arial", 10),
+            text_color="gray"
+        )
+        helper.pack(pady=5)
+    
+    def add_starter_product(self):
+        """Add product to starter list"""
+        name = self.product_name_entry.get().strip()
+        price = self.product_price_entry.get().strip()
+        stock = self.product_stock_entry.get().strip()
+        category = self.product_category_var.get()
+        
+        if not name or not price or not stock:
+            messagebox.showwarning("Required Fields", "Please fill in name, price, and stock")
+            return
+        
+        try:
+            price_val = float(price)
+            stock_val = int(stock)
+            
+            if price_val <= 0 or stock_val < 0:
+                raise ValueError("Invalid values")
+            
+            # Add to list
+            self.starter_products.append({
+                'name': name,
+                'price': price_val,
+                'stock': stock_val,
+                'category': category
+            })
+            
+            # Clear form
+            self.product_name_entry.delete(0, 'end')
+            self.product_price_entry.delete(0, 'end')
+            self.product_stock_entry.delete(0, 'end')
+            
+            # Refresh display
+            self.refresh_product_list()
+            
+        except ValueError:
+            messagebox.showerror("Invalid Input", "Please enter valid numbers for price and stock")
+    
+    def refresh_product_list(self):
+        """Refresh the product list display"""
+        for widget in self.product_list_frame.winfo_children():
+            widget.destroy()
+        
+        if not self.starter_products:
+            ctk.CTkLabel(
+                self.product_list_frame,
+                text="No products added yet. Add some products above or skip this step.",
+                text_color="gray",
+                font=("Arial", 10)
+            ).pack(pady=20)
+        else:
+            for i, product in enumerate(self.starter_products):
+                row = ctk.CTkFrame(self.product_list_frame, fg_color="#3A3A3A", corner_radius=5)
+                row.pack(fill="x", pady=2, padx=5)
+                
+                text = f"{product['name']} - LKR {product['price']:.2f} ({product['stock']} in stock)"
+                ctk.CTkLabel(row, text=text, anchor="w").pack(side="left", padx=10, pady=5)
+                
+                ctk.CTkLabel(row, text=f"[{product['category']}]", text_color="#2CC985").pack(side="left", padx=5)
+                
+                # Remove button
+                remove_btn = ctk.CTkButton(
+                    row,
+                    text="✖",
+                    width=30,
+                    height=25,
+                    fg_color="transparent",
+                    hover_color="#CF6679",
+                    command=lambda idx=i: self.remove_starter_product(idx)
+                )
+                remove_btn.pack(side="right", padx=5)
+    
+    def remove_starter_product(self, index):
+        """Remove product from starter list"""
+        if 0 <= index < len(self.starter_products):
+            self.starter_products.pop(index)
+            self.refresh_product_list()
+    
+    def save_starter_products(self):
+        """Save starter products to database"""
+        try:
+            import sqlite3
+            conn = sqlite3.connect('buildsmart_hardware.db')
+            cursor = conn.cursor()
+            
+            for product in self.starter_products:
+                cursor.execute("""
+                    INSERT INTO products (name, category, price_per_unit, unit_type, stock_quantity, reorder_level)
+                    VALUES (?, ?, ?, ?, ?, ?)
+                """, (
+                    product['name'],
+                    product['category'],
+                    product['price'],
+                    'unit',  # Default unit type
+                    product['stock'],
+                    10  # Default reorder level
+                ))
+            
+            conn.commit()
+            conn.close()
+        except Exception as e:
+            print(f"Error saving starter products: {e}")
     
     def show_features(self):
         """Optional features step"""
@@ -471,6 +671,10 @@ class FirstRunWizard(ctk.CTk):
             with open('config.json', 'w', encoding='utf-8') as f:
                 json.dump(self.config_data, f, indent=2)
             
+            # Add starter products to database
+            if hasattr(self, 'starter_products') and self.starter_products:
+                self.save_starter_products()
+            
             # Generate sample data if requested
             if hasattr(self, 'sample_data_var') and self.sample_data_var.get():
                 try:
@@ -484,9 +688,11 @@ class FirstRunWizard(ctk.CTk):
             # Create first-run marker
             Path('.configured').touch()
             
+            products_msg = f"\n\n✅ {len(self.starter_products)} products added to inventory!" if hasattr(self, 'starter_products') and self.starter_products else ""
+            
             messagebox.showinfo(
                 "Setup Complete",
-                "BuildSmartOS has been configured successfully!\n\n"
+                f"BuildSmartOS has been configured successfully!{products_msg}\n\n"
                 "The application will now start.\n\n"
                 "You can change these settings later in config.json"
             )
