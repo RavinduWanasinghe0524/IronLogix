@@ -1,329 +1,113 @@
-# 🏪 BuildSmartOS - Sri Lanka's First Smart Hardware POS System
-
-![Production Ready](https://img.shields.io/badge/Status-Production%20Ready-brightgreen) ![Tests Passing](https://img.shields.io/badge/Tests-27%2F27%20Passing-success) ![Python](https://img.shields.io/badge/Python-3.8%2B-blue) ![Made in Sri Lanka](https://img.shields.io/badge/Made%20in-Sri%20Lanka%20🇱🇰-orange)
-
-**🎉 NOW WITH INSTALLER! Add products during setup - no technical knowledge required!**
-
-## 🆕 What's New in v1.0
-
-⚡ **One-Click Installation** - New setup wizard walks you through everything
-🛒 **Product Seeding During Install** - Add your initial inventory while installing
-🐛 **WhatsApp Freeze Fixed** - Checkout stays responsive while sending invoices
-📱 **Enhanced Refund System** - Search by phone number or date range
-
-## Overview
-
-BuildSmartOS is a revolutionary point-of-sale system designed specifically for Sri Lankan hardware stores. It combines traditional POS functionality with cutting-edge AI, multi-language support, and business intelligence features.
-
-## 🌟 Key Features
-
-### Multi-Language Support
-- **Sinhala, Tamil, and English** interface
-- Real-time language switching
-- Unicode support for native scripts
-
-### WhatsApp Integration 📱
-- Send invoices directly to customers via WhatsApp
-- Automated low-stock alerts
-- Professional message formatting
-
-### AI-Powered Analytics 🤖
-- Sales predictions using machine learning
-- Automated reorder recommendations
-- Trend analysis and forecasting
-
-### Voice Control 🎤
-- Hands-free operation
-- Commands in Sinhala, Tamil, and English
-- Text-to-speech feedback
-
-### Barcode/QR Scanning
-- Instant product lookup
-- Camera-based scanning
-- QR code generation for products
-
-### Customer Loyalty Program 🎁
-- Automatic points tracking
-- Rewards system
-- Customer purchase history
-
-### Construction Estimator 🏗️
-- Project cost calculator
-- Sri Lankan market-specific templates
-- Material quantity estimation
-
-### Business Intelligence 📊
-- Real-time sales dashboard
-- Profit margin analysis
-- Top-selling products reports
-- Sales trend charts
-
-### Additional Features
-- Credit customer management
-- Supplier database
-- Expense tracking
-- Cloud backup support
-- Professional PDF invoices
-- Touch-optimized interface
-
-## 📋 Requirements
-
-### System Requirements
-- Windows 10 or later
-- Python 3.8+
-- Webcam (for barcode scanning)
-- Microphone (for voice commands)
-- Internet connection (for WhatsApp, cloud backup)
-
-### Python Dependencies
-```bash
-pip install -r requirements.txt
-```
-
-## 📚 Documentation
-
-**Quick Start:**
-- 📖 [Quick Start Guide](QUICKSTART_GUIDE.md) - Get running in 5 minutes
-- 📘 [User Manual](USER_MANUAL.md) - Complete feature guide
-- 🔧 [Troubleshooting Guide](TROUBLESHOOTING.md) - Fix common issues
-
-**For Developers:**
-- 💻 [Developer Guide](DEVELOPER_GUIDE.md) - Architecture & API docs
-- ✅ [Phase 1 Report](PHASE1_COMPLETE.md) - Setup completion
-- 📊 [Phase 2 Test Report](PHASE2_TEST_REPORT.md) - Testing results (100% pass)
-
-## 🚀 Quick Start
-
-### ⚡ Super Quick Install (3 Steps)
-```bash
-# 1. Clone the repo
-git clone https://github.com/RavinduWanasinghe0524/IronLogix.git
-cd BuildSmartOS
-
-# 2. Run automated installer
-python setup_installer.py
-
-# 3. Launch and enjoy!
-python main.py
-```
-
-**That's it!** The setup wizard will guide you through adding your first products.
-
-**OR** use the manual steps below:
-
-### 1. Database Setup
-```bash
-python database_setup.py
-```
-
-### 2. Configuration
-Edit `config.json` to customize:
-- Business information
-- Default language
-- Feature toggles
-- API keys
-
-### 3. Run Application
-```bash
-python main.py
-```
-
-## 📱 WhatsApp Setup
-
-1. **Method 1: Using pywhatkit (Free)**
-   - No API key required
-   - Uses WhatsApp Web
-   - Manual QR code scan on first use
-
-2. **Method 2: WhatsApp Business API (Paid)**
-   - Add API key to `config.json`
-   - Fully automated sending
-
-## 🎨 Usage Guide
-
-### Basic Sale
-1. Browse products or use search
-2. Click "+" to add items to cart
-3. Click "CHECKOUT" to complete sale
-4. Optionally send invoice via WhatsApp
-
-### Voice Commands
-- "Add cement to cart"
-- "Search for paint"
-- "What's the total?"
-- "Checkout"
-
-### Barcode Scanning
-- Click barcode icon
-- Point camera at barcode/QR code
-- Product automatically added
-
-### Construction Estimates
-1. Open estimator tool
-2. Select project type
-3. Enter area
-4. Get instant material list and costs
-
-### Analytics
-- View sales dashboard
-- Generate reports
-- Analyze trends
-- Check profit margins
-
-## 🔧 Configuration
-
-### config.json Structure
-```json
-{
-  "business": {
-    "name": "Your Store Name",
-    "address": "Store Address",
-    "phone": "077-1234567"
-  },
-  "settings": {
-    "default_language": "english",
-    "theme": "dark"
-  },
-  "features": {
-    "whatsapp_enabled": true,
-    "voice_enabled": true,
-    "barcode_enabled": true
-  }
-}
-```
-
-## 📊 Database Schema
-
-- **products**: Product inventory
-- **customers**: Customer database with loyalty points
-- **transactions**: Sales records
-- **sales_items**: Transaction line items
-- **suppliers**: Supplier information
-- **loyalty_transactions**: Points history
-- **credit_sales**: Credit tracking
-- **expenses**: Business expenses
-
-## 🛠️ Development
-
-### Project Structure
-```
-BuildSmartOS/
-├── main.py                      # Main application
-├── database_setup.py            # Database initialization
-├── pdf_generator.py             # Invoice generation
-├── language_manager.py          # Multi-language support
-├── whatsapp_service.py          # WhatsApp integration
-├── barcode_scanner.py           # Barcode/QR scanning
-├── voice_assistant.py           # Voice commands
-├── loyalty_manager.py           # Loyalty program
-├── ai_predictor.py              # AI predictions
-├── analytics_dashboard.py       # Analytics
-├── construction_estimator.py    # Cost estimator
-├── themes.py                    # UI themes
-├── config.json                  # Configuration
-├── requirements.txt             # Dependencies
-├── translations/                # Language files
-│   ├── english.json
-│   ├── sinhala.json
-│   └── tamil.json
-├── bills/                       # Generated invoices
-├── reports/                     # Analytics reports
-└── models/                      # AI models
-
-```
-
-## 🌐 Localization
-
-Add new languages by:
-1. Create `translations/language_name.json`
-2. Copy structure from `english.json`
-3. Translate all values
-4. Update `language_manager.py`
-
-## 🔐 Security
-
-- Local SQLite database
-- Optional cloud backup encryption
-- Customer data privacy
-- Secure API key storage
-
-## ✅ Testing & Quality Assurance
-
-**Phase 2 Testing Complete: 100% Success Rate**
-
-- **Total Tests:** 27 automated tests
-- **Pass Rate:** 27/27 (100%)
-- **Test Coverage:**
-  - ✅ Core functionality (10/10)
-  - ✅ Product management (5/5)
-  - ✅ Customer management (5/5)
-  - ✅ Analytics dashboard (7/7)
-
-**Database Health:**
-- 8 tables fully operational
-- 16 performance indexes active
-- 2 data integrity triggers working
-- No data corruption detected
-
-**Test Reports:**
-- [Phase 2 Test Report](PHASE2_TEST_REPORT.md) - Detailed results
-- [Manual Testing Guide](MANUAL_TESTING_GUIDE.md) - UI testing procedures
-
-## 📈 Roadmap
-
-- [ ] Mobile app (Android/iOS)
-- [ ] Web dashboard
-- [ ] Multi-store support
-- [ ] Advanced reporting
-- [ ] Integration with accounting software
-- [ ] Email invoicing
-- [ ] SMS notifications
-
-## 💡 Tips
-
-1. **First Launch**: Complete database setup
-2. **Regular Backups**: Enable cloud backup
-3. **Train AI**: Import historical sales for better predictions
-4. **Update Stock**: Regular inventory counts
-5. **Customer Loyalty**: Encourage phone number collection
-
-## 🐛 Troubleshooting
-
-### Voice Commands Not Working
-- Check microphone permissions
-- Verify internet connection (uses Google Speech API)
-- Test with English first
-
-### WhatsApp Not Sending
-- Ensure WhatsApp Web is logged in
-- Check internet connection
-- Verify phone number format
-
-### Barcode Scanner Issues
-- Allow camera permissions
-- Ensure good lighting
-- Hold barcode steady
-
-## 📞 Support
-
-- Email: info@buildsmart.lk
-- Website: buildsmart.lk
-- Phone: 077-1234567
-
-## 📄 License
-
-Proprietary - BuildSmart OS
-© 2024 BuildSmart Technologies
-
-## 🙏 Acknowledgments
-
-Built with:
-- CustomTkinter for modern UI
-- ReportLab for PDF generation
-- scikit-learn for AI predictions
-- OpenCV for barcode scanning
-- pywhatkit for WhatsApp integration
+# BuildSmartOS - Hardware POS System
+
+## 🎉 Welcome!
+
+**BuildSmartOS** is a complete Point of Sale system for hardware stores in Sri Lanka.
+
+### ✨ Features:
+- 🛒 Full POS System
+- 📦 Inventory Management  
+- 👥 Customer Database
+- 📱 WhatsApp Invoices
+- 📄 PDF Bills
+- ⭐ Loyalty Points
+- 📊 Sales Analytics
+- 🏗️ Construction Estimator
 
 ---
 
-**Made with ❤️ in Sri Lanka**
+## 🚀 Quick Start
+
+### First Time Setup:
+1. Double-click `Install BuildSmartOS.bat`
+2. Wait for installation to complete
+
+### Running the Application:
+1. Double-click `Run BuildSmartOS.bat`
+2. Application starts with 30-day FREE trial
+3. All features fully functional!
+
+---
+
+## 🎁 Free Trial
+
+**30 Days FREE** - Try all features!
+
+After trial ends:
+1. Note your Machine ID from the dialog
+2. Contact support: 077-XXXXXXX
+3. Make payment: LKR 50,000 (one-time)
+4. Receive activation code
+5. Enter code → Permanent license!
+
+---
+
+## 📚 Documentation
+
+- **`USER_MANUAL.md`** - Complete user guide
+- **`TROUBLESHOOTING.md`** - Solve common issues
+- **`LICENSE_SYSTEM_GUIDE.md`** - Licensing details
+- **`DEVELOPER_GUIDE.md`** - For developers
+- **`README_FINAL.md`** - Complete overview
+
+---
+
+## 📞 Support
+
+**Need Help?**
+- WhatsApp: 077-XXXXXXX
+- Email: support@buildsmart.lk
+
+**For Activation:**
+- Contact with your Machine ID
+- Payment details will be provided
+- Code delivered within 24 hours
+
+---
+
+## ⚙️ System Requirements
+
+- **OS:** Windows 7 or higher
+- **RAM:** 2GB minimum
+- **Storage:** 500MB free space
+- **Python:** 3.8+ (auto-installed)
+- **Internet:** Required for WhatsApp feature
+
+---
+
+## 🔧 Backup Your Data
+
+Always backup before major changes:
+- Double-click `Backup Database.bat`
+- Backups saved to `backups/` folder
+
+---
+
+## 💼 For Business Owners
+
+BuildSmartOS helps you:
+- ✅ Track inventory in real-time
+- ✅ Manage customer relationships
+- ✅ Send professional invoices via WhatsApp
+- ✅ View sales analytics
+- ✅ Estimate construction projects
+- ✅ Process refunds easily
+- ✅ Reward loyal customers
+
+**Save 5+ hours per week on manual tasks!**
+
+---
+
+## 🌐 Multi-Language Support
+
+- English
+- Sinhala  
+- Tamil
+
+Switch language in the application settings.
+
+---
+
+**BuildSmartOS** - Smart POS for Smart Business 💼
+
+Version 1.0 | December 2025
