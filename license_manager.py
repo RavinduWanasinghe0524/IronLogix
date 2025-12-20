@@ -1,6 +1,6 @@
 """
 License Manager for BuildSmartOS
-Handles trial period and activation codes
+Handles trial period, activation codes, and trial reminders
 """
 import json
 import os
@@ -8,11 +8,15 @@ from datetime import datetime, timedelta
 import hashlib
 import uuid
 
+# Master unlock code for admin/developer
+MASTER_CODE = "72233559"
+
 class LicenseManager:
     def __init__(self):
         self.license_file = "license.json"
         self.trial_days = 30
         self.license_data = self.load_license()
+        self.last_reminder_file = ".last_reminder"
     
     def load_license(self):
         """Load license data from file"""
@@ -97,7 +101,16 @@ class LicenseManager:
             return 0
     
     def activate(self, activation_code):
-        """Activate with code"""
+        """Activate with code or master code"""
+        # Check if master code
+        if activation_code.strip() == MASTER_CODE:
+            self.license_data["activated"] = True
+            self.license_data["activation_code"] = "MASTER_CODE"
+            self.license_data["activation_date"] = datetime.now().isoformat()
+            self.license_data["license_type"] = "full"
+            self.save_license(self.license_data)
+            return True, "Master code accepted! Full access granted."
+        
         # Verify activation code
         valid_code = self.generate_activation_code(self.license_data["machine_id"])
         
@@ -137,6 +150,105 @@ class LicenseManager:
             info["expiry_date"] = self.license_data.get("expiry_date", "Unknown")
         
         return info
+    
+    def should_show_reminder(self):
+        """Check if reminder should be shown today"""
+        days_remaining = self.get_days_remaining()
+        
+        # Don't show reminders if activated
+        if self.license_data.get("activated", False):
+            return False, None
+        
+        # Show reminder at 10 days and every day from 5 days onwards
+        if days_remaining <= 0:
+            return True, "expired"
+        elif days_remaining <= 5:
+            return True, f"{days_remaining}_days"
+        elif days_remaining == 10:
+            return True, "10_days"
+        
+        return False, None
+    
+    def get_last_reminder_date(self):
+        """Get the last date a reminder was shown"""
+        try:
+            if os.path.exists(self.last_reminder_file):
+                with open(self.last_reminder_file, 'r') as f:
+                    return f.read().strip()
+        except:
+            pass
+        return None
+    
+    def save_reminder_date(self):
+        """Save today's date as last reminder date"""
+        try:
+            with open(self.last_reminder_file, 'w') as f:
+                f.write(datetime.now().strftime("%Y-%m-%d"))
+        except:
+            pass
+    
+    def should_show_reminder_today(self):
+        """Check if we should show reminder today (not already shown)"""
+        should_show, reminder_type = self.should_show_reminder()
+        
+        if not should_show:
+            return False, None
+        
+        # Check if already shown today
+        last_reminder = self.get_last_reminder_date()
+        today = datetime.now().strftime("%Y-%m-%d")
+        
+        if last_reminder == today and reminder_type != "expired":
+            return False, None
+        
+        return True, reminder_type
+    
+    def get_reminder_message(self, reminder_type):
+        """Get reminder message based on type"""
+        if reminder_type == "expired":
+            return {
+                "title": "Trial Period Expired",
+                "message": (
+                    "Your 30-day free trial has expired.\n\n"
+                    "To continue using BuildSmartOS:\n\n"
+                    "1. Note your Machine ID from the license dialog\n"
+                    "2. Contact support: 077-XXXXXXX\n"
+                    "3. Make payment: LKR 50,000 (one-time)\n"
+                    "4. Receive activation code\n"
+                    "5. Enter code to activate\n\n"
+                    "Thank you for using BuildSmartOS!"
+                ),
+                "type": "error"
+            }
+        elif reminder_type == "10_days":
+            return {
+                "title": "Trial Reminder - 10 Days Left",
+                "message": (
+                    "Your BuildSmartOS trial will expire in 10 days.\n\n"
+                    "To avoid interruption:\n\n"
+                    "• Contact us early: 077-XXXXXXX\n"
+                    "• Payment: LKR 50,000 (one-time)\n"
+                    "• Get activation code\n"
+                    "• Activate anytime before trial ends\n\n"
+                    "Questions? We're here to help!"
+                ),
+                "type": "warning"
+            }
+        else:  # 5 days or less
+            days = reminder_type.split("_")[0]
+            return {
+                "title": f"Trial Expiring - {days} Days Left!",
+                "message": (
+                    f"Your trial expires in {days} days.\n\n"
+                    "⚠️ Action Required:\n\n"
+                    "1. Contact: 077-XXXXXXX\n"
+                    "2. Payment: LKR 50,000\n"
+                    "3. Get activation code\n"
+                    "4. Activate now\n\n"
+                    "Don't lose access to your data!"
+                ),
+                "type": "warning"
+            }
     
     def reset_trial(self, admin_code):
         """Reset trial period (admin only)"""

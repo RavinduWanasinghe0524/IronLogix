@@ -866,23 +866,48 @@ class BuildSmartPOS(ctk.CTk):
             license_mgr = get_license_manager()
             valid, status = license_mgr.is_valid()
             
-            if not valid:
+            # Check if we should show reminder
+            should_remind, reminder_type = license_mgr.should_show_reminder_today()
+            
+            if should_remind and reminder_type:
+                reminder_info = license_mgr.get_reminder_message(reminder_type)
+                
+                if reminder_type == "expired":
+                    # Trial expired - must activate
+                    messagebox.showerror(
+                        reminder_info["title"],
+                        reminder_info["message"]
+                    )
+                    can_continue = show_license_dialog(self)
+                    if not can_continue:
+                        messagebox.showerror(
+                            "License Expired",
+                            "Your trial period has expired.\n"
+                            "Please contact support for activation code.\n\n"
+                            "Contact: 077-XXXXXXX\n\n"
+                            "The application will now close."
+                        )
+                        self.quit()
+                    license_mgr.save_reminder_date()
+                else:
+                    # Just a reminder - can continue
+                    messagebox.showwarning(
+                        reminder_info["title"],
+                        reminder_info["message"]
+                    )
+                    license_mgr.save_reminder_date()
+            
+            elif not valid:
                 # License expired, show activation dialog
                 can_continue = show_license_dialog(self)
                 if not can_continue:
                     messagebox.showerror(
                         "License Expired",
-                        "Your trial period has expired.\nPlease contact support for activation code.\n\nThe application will now close."
+                        "Your trial period has expired.\n"
+                        "Please contact support for activation code.\n\n"
+                        "The application will now close."
                     )
                     self.quit()
-            else:
-                # Show status message
-                days = license_mgr.get_days_remaining()
-                if days > 0 and days <= 7:
-                    messagebox.showinfo(
-                        "Trial Reminder",
-                        f"Your trial period will expire in {days} days.\n\nTo continue using BuildSmartOS after the trial,\nplease contact support for an activation code."
-                    )
         except ImportError:
             # License module not available, continue without check
             pass
