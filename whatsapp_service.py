@@ -1,12 +1,20 @@
 """
 WhatsApp Invoice Service for BuildSmartOS
-Sends invoices via WhatsApp using pywhatkit
+Sends invoices via WhatsApp Desktop app using GUI automation
 """
 import pywhatkit as kit
 import json
 import os
 import threading
 from datetime import datetime, timedelta
+
+# Try to import Desktop sender
+DESKTOP_SENDER_AVAILABLE = False
+try:
+    from whatsapp_desktop_sender import get_desktop_sender, is_whatsapp_installed, is_whatsapp_running
+    DESKTOP_SENDER_AVAILABLE = True
+except ImportError:
+    print("WhatsApp Desktop sender not available - install pywin32 and psutil")
 
 class WhatsAppService:
     def __init__(self):
@@ -64,6 +72,32 @@ class WhatsAppService:
             business_name = self.config.get("business", {}).get("name", "BuildSmart Hardware")
             message = self.create_invoice_message(business_name, transaction_id, total_amount, items_list)
             
+            # If PDF path is provided and Desktop sender is available, send via Desktop app
+            if pdf_path and DESKTOP_SENDER_AVAILABLE:
+                try:
+                    # Check if WhatsApp Desktop is installed
+                    if not is_whatsapp_installed():
+                        return False, "WhatsApp Desktop is not installed. Please install from Microsoft Store."
+                    
+                    # Check if WhatsApp is running, if not try to open it
+                    desktop_sender = get_desktop_sender()
+                    if not is_whatsapp_running():
+                        success, msg = desktop_sender.open_whatsapp()
+                        if not success:
+                            return False, msg
+                    
+                    # Send PDF via Desktop app
+                    success, result_msg = desktop_sender.send_pdf(formatted_phone, pdf_path, message)
+                    
+                    if success:
+                        return True, f"✅ Invoice PDF sent via WhatsApp to {formatted_phone}"
+                    else:
+                        # If Desktop sending fails, fall back to text message
+                        print(f"Desktop send failed: {result_msg}. Falling back to text message.")
+                except Exception as desktop_error:
+                    print(f"WhatsApp Desktop error: {desktop_error}. Falling back to text message.")
+            
+            # Send text message (either as fallback or if no PDF)
             # Calculate send time (current time + delay)
             now = datetime.now()
             send_time = now + timedelta(seconds=self.send_delay)
@@ -79,7 +113,11 @@ class WhatsAppService:
             # Send message with error handling
             try:
                 kit.sendwhatmsg(formatted_phone, message, hour, minute, wait_time=15, tab_close=True, close_time=3)
-                return True, f"Invoice sent via WhatsApp to {formatted_phone}"
+                
+                if pdf_path:
+                    return True, f"📱 Invoice text sent to {formatted_phone}. PDF sending via Desktop failed."
+                else:
+                    return True, f"📱 Invoice sent via WhatsApp to {formatted_phone}"
             except Exception as send_error:
                 # Log the specific sending error
                 error_msg = str(send_error)

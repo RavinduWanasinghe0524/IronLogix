@@ -13,6 +13,8 @@ deep-translator>=1.11.4
 # WhatsApp Integration
 pywhatkit>=5.4
 pyautogui>=0.9.54
+pywin32>=306  # For clipboard access
+psutil>=5.9.0  # For process detection
 
 # Voice Recognition
 SpeechRecognition>=3.10.0
