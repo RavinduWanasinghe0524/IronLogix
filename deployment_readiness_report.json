@@ -1,0 +1,22 @@
+{
+  "timestamp": "2025-12-20T15:39:29.774540",
+  "tests": {
+    "system": {
+      "status": "PASS",
+      "output": "\n============================================================\n     BuildSmartOS System Test\n============================================================\n\n============================================================\n  MODULE IMPORT TEST\n============================================================\n[OK] Core UI: customtkinter\n[OK] Database: sqlite3\n[OK] Configuration: json\n[OK] Date/Time: datetime\n\nOptional Modules:\n[OK] WhatsApp: pywhatkit\n[OK] PDF Generation: reportlab\n[OK] Analytics: matplotlib\n"
+    },
+    "whatsapp": {
+      "status": "FAIL",
+      "output": "\n>>> Starting WhatsApp Integration Tests...\n\n\n============================================================\n  WhatsApp Edge Case Testing\n============================================================\n\n1. Testing Invalid Phone Numbers:\n  [OK] ''                   -> +94\n  [OK] '123'                -> +94123\n  [OK] 'abcdefg'            -> +94\n  [!]  None type handled\n\n2. Testing Valid Phone Formats:\n  [OK] 0771234567      -> +94771234567    (expected: +94771234567)\n  [OK] 771234567       -> +94771234"
+    }
+  },
+  "files_check": {
+    "status": "PASS",
+    "missing": []
+  },
+  "overall_status": "NOT READY",
+  "config": {
+    "status": "PASS",
+    "whatsapp_enabled": true
+  }
+}
