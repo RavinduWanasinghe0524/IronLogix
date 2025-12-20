@@ -119,6 +119,9 @@ class BuildSmartPOS(ctk.CTk):
         self.title("BuildSmart OS - Sri Lanka's Smart Hardware POS")
         self.geometry("1400x900")
         
+        # Check license before continuing
+        self.check_license()
+        
         # Initialize managers
         if LANG_AVAILABLE:
             self.lang_manager = get_language_manager()
@@ -156,6 +159,9 @@ class BuildSmartPOS(ctk.CTk):
         # Load Initial Data
         self.load_products()
         self.check_low_stock()
+        
+        # Show license info in status bar
+        self.show_license_status()
     
     def load_config(self):
         """Load application configuration"""
@@ -850,6 +856,55 @@ class BuildSmartPOS(ctk.CTk):
             return
         
         show_refund_manager(self)
+    
+    def check_license(self):
+        """Check license validity on startup"""
+        try:
+            from license_manager import get_license_manager
+            from license_dialog import show_license_dialog
+            
+            license_mgr = get_license_manager()
+            valid, status = license_mgr.is_valid()
+            
+            if not valid:
+                # License expired, show activation dialog
+                can_continue = show_license_dialog(self)
+                if not can_continue:
+                    messagebox.showerror(
+                        "License Expired",
+                        "Your trial period has expired.\nPlease contact support for activation code.\n\nThe application will now close."
+                    )
+                    self.quit()
+            else:
+                # Show status message
+                days = license_mgr.get_days_remaining()
+                if days > 0 and days <= 7:
+                    messagebox.showinfo(
+                        "Trial Reminder",
+                        f"Your trial period will expire in {days} days.\n\nTo continue using BuildSmartOS after the trial,\nplease contact support for an activation code."
+                    )
+        except ImportError:
+            # License module not available, continue without check
+            pass
+    
+    def show_license_status(self):
+        """Show license status in the UI"""
+        try:
+            from license_manager import get_license_manager
+            
+            license_mgr = get_license_manager()
+            valid, status = license_mgr.is_valid()
+            
+            # Add license info to top bar
+            license_label = ctk.CTkLabel(
+                self.children['!ctkframe'],  # Top bar frame
+                text=f"📋 {status}",
+                font=("Arial", 10),
+                text_color="#FFA726" if "Trial" in status else "#4CAF50"
+            )
+            license_label.grid(row=0, column=10, padx=10, pady=10, sticky="e")
+        except:
+            pass
 
 if __name__ == "__main__":
     app = BuildSmartPOS()
